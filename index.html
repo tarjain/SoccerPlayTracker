@@ -458,15 +458,17 @@ function renderSeason(){
     detail = `<section class="card" style="margin-top:14px">
       <h2>${fmtDate(sg.date)} vs ${esc(sg.opponent||'—')} <span>${sg.us}–${sg.them} · ${sg.format}v${sg.format} · ${fmt(clockNow(sg))} played</span></h2>
       ${evs?`<ul class="log" style="max-height:none">${evs}</ul>`:`<p class="hint">No subs or goals logged.</p>`}
-      <div class="actions" style="margin-top:12px;max-width:420px">
+      <p class="hint" style="margin-top:12px">Reset times keeps this game and its players but puts the clock, score, play times and log back to kick-off with the starting lineup. Delete game removes it from the grid.</p>
+      <div class="actions" style="max-width:560px">
         <button class="btn" data-act="openGame" data-id="${sg.id}">Open on Game screen</button>
+        <button class="btn warn ${S.armed==='reset'?'armed':''}" data-act="resetGame" data-id="${sg.id}" ${readOnly?'disabled':''}>${S.armed==='reset'?'Tap again to reset':'Reset times'}</button>
         <button class="btn warn ${S.armed==='del'?'armed':''}" data-act="delGame" data-id="${sg.id}" ${readOnly?'disabled':''}>${S.armed==='del'?'Tap again to delete':'Delete game'}</button>
       </div></section>`;
   }
   el.innerHTML = `<div class="gridwrap"><table class="season">
     <thead><tr><th class="pl">Player</th>${head}<th>Total</th><th>Games</th><th>Avg</th></tr></thead>
     <tbody>${rows}</tbody></table></div>
-    <div class="legend"><span><i style="background:rgba(var(--heat),.55)"></i>Played the whole game</span><span><i style="background:rgba(var(--heat),.15)"></i>Short shift</span><span>— not at that game</span><span>Tap a game for its sub log</span></div>
+    <div class="legend"><span><i style="background:rgba(var(--heat),.55)"></i>Played the whole game</span><span><i style="background:rgba(var(--heat),.15)"></i>Short shift</span><span>— not at that game</span><span>Tap a game's column to see its log, reset its times or delete it</span></div>
     ${detail}`;
 }
 
@@ -559,6 +561,19 @@ function endGame(g){
   if(g.clock.runAt){ g.clock.acc+=Date.now()-g.clock.runAt; g.clock.runAt=null; }
   g.status='final';
 }
+function resetGame(g){
+  // Walk the subs backwards to recover the starting lineup, then zero everything.
+  for(const e of [...g.events].reverse()){
+    if(e.type!=='sub') continue;
+    if(g.lineup[e.in]) g.lineup[e.in].slot=null;
+    if(e.out && g.lineup[e.out]) g.lineup[e.out].slot=e.slot;
+  }
+  Object.values(g.lineup).forEach(p=>{ p.played=0; p.since=0; });
+  g.events=[]; g.us=0; g.them=0; g.clock={acc:0,runAt:null}; g.status='live';
+  Object.values(S.games).forEach(x=>{ if(x.status==='live' && x.id!==g.id){ endGame(x); saveGame(x); } });
+  S.selB=S.selF=S.selSlot=null;
+  saveGame(g);
+}
 function newGame(){
   const t=ensureTeam();
   const here=t.players.filter(p=>document.getElementById('att-'+p.id)?.checked);
@@ -598,6 +613,7 @@ document.addEventListener('click',ev=>{
   else if(a==='openGame'){ const sg=S.games[b.dataset.id];
     Object.values(S.games).forEach(x=>{ if(x.status==='live' && x.id!==sg.id){ endGame(x); saveGame(x); } });
     if(sg.status!=='live'){ sg.status='live'; saveGame(sg); } setView('game'); }
+  else if(a==='resetGame'){ if(arm('reset')){ S.armed=null; resetGame(S.games[b.dataset.id]); render(); toast('Game reset to kick-off'); } }
   else if(a==='delGame'){ if(arm('del')){ S.armed=null; removeGame(b.dataset.id); S.gridGame=null; render(); toast('Game deleted'); } }
   else if(a==='rmPlayer'){ const t=ensureTeam(); t.players=t.players.filter(p=>p.id!==pid); saveTeam(); render(); }
   else if(a==='newGame') newGame();

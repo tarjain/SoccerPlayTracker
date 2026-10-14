@@ -1,6 +1,6 @@
 // Caches the app shell so it opens with no internet at the field.
 // Bump VERSION whenever index.html changes so iPads pick up the new copy.
-const VERSION = 'sideline-subs-v1';
+const VERSION = 'sideline-subs-v2';
 const FILES = ['./', './index.html', './manifest.json', './apple-touch-icon.png', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', e => {
