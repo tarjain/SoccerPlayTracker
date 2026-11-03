@@ -49,28 +49,50 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font
 button,input,select{font:inherit;color:inherit}
 button{cursor:pointer}
 :focus-visible{outline:3px solid var(--led);outline-offset:2px}
-.wrap{max-width:1180px;margin:0 auto;padding-inline:16px;padding-block:12px 120px}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:16px;padding-block:12px 190px}
 
 /* top nav */
 .nav{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
 .brand{font-family:var(--display);font-weight:700;font-size:22px;letter-spacing:.02em;text-transform:uppercase}
 .brand small{font-weight:500;color:var(--muted);letter-spacing:.08em;font-size:13px;margin-left:6px}
-.tabs{display:flex;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:3px}
-.tabs button{border:0;background:none;padding:7px 14px;border-radius:7px;font-family:var(--display);font-weight:600;font-size:16px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
-.tabs button[aria-selected="true"]{background:var(--board);color:var(--board-ink)}
+/* bottom menu: Team → Games → Field → Minutes */
+.bottomnav{position:fixed;left:0;right:0;bottom:0;z-index:6;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;background:var(--surface);border-top:1px solid var(--line);padding:6px 10px calc(6px + env(safe-area-inset-bottom,0px));box-shadow:0 -4px 16px rgba(0,0,0,.08)}
+.bottomnav button{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0 5px;border-radius:10px;color:var(--muted);font-family:var(--display);font-weight:600;font-size:13px;letter-spacing:.08em;text-transform:uppercase}
+.bottomnav svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.bottomnav button[aria-current="page"]{color:var(--ink);background:var(--surface-2)}
+.bottomnav button[aria-current="page"] svg{stroke:var(--grass)}
+.bottomnav .live-dot{position:absolute;margin-left:22px;margin-top:2px;width:8px;height:8px;border-radius:50%;background:var(--out)}
 
 .banner{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:var(--surface-2);border:1px dashed var(--line);border-radius:10px;padding:10px 14px;margin-bottom:12px;color:var(--muted);font-size:14px}
 
 /* scoreboard */
-.board{background:var(--board);color:var(--board-ink);border-radius:12px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
-.score{display:flex;align-items:center;gap:14px;min-width:0}
-.side{display:flex;flex-direction:column;min-width:0}
-.side .tn{font-family:var(--display);text-transform:uppercase;letter-spacing:.06em;font-size:14px;opacity:.75;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:9em}
-.side .sc{font-family:var(--display);font-weight:700;font-size:44px;line-height:1;color:var(--led);font-variant-numeric:tabular-nums}
-.score .dash{font-family:var(--display);font-size:30px;opacity:.5}
-.clockbox{display:flex;align-items:center;gap:14px;margin-left:auto}
-.clockbox .lbl{font-family:var(--display);text-transform:uppercase;letter-spacing:.1em;font-size:13px;opacity:.75;text-align:right}
-.clock{font-family:var(--display);font-weight:700;font-size:48px;line-height:1;color:var(--led);font-variant-numeric:tabular-nums;min-width:3.2em;text-align:right}
+.board{background:var(--board);color:var(--board-ink);border-radius:14px;padding:14px 18px;display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:14px;border:3px solid #2b352f}
+.board .team{display:flex;flex-direction:column;gap:8px;min-width:0;border-radius:10px;padding:6px;transition:background .12s}
+.board .team.them{align-items:flex-end;text-align:right}
+.board .tn{font-family:var(--display);text-transform:uppercase;letter-spacing:.1em;font-size:15px;opacity:.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.digits{display:flex;align-items:center;gap:12px}
+.sc{font-family:var(--display);font-weight:700;font-size:60px;line-height:1;color:var(--led);font-variant-numeric:tabular-nums;background:#050806;border-radius:8px;padding:6px 16px;min-width:1.7em;text-align:center;text-shadow:0 0 14px rgba(242,182,48,.45)}
+.sc.bump{animation:bump .55s ease}
+@keyframes bump{0%{transform:scale(1)}35%{transform:scale(1.2)}100%{transform:scale(1)}}
+.plus{width:54px;height:54px;flex:none;border-radius:50%;border:2px solid var(--led);background:transparent;color:var(--led);font-family:var(--display);font-size:36px;font-weight:600;line-height:1;display:grid;place-items:center;touch-action:none;cursor:grab;padding:0}
+.plus:active{background:var(--led);color:#1a1405}
+.plus:disabled{opacity:.3;cursor:not-allowed}
+.board .team.drop{background:rgba(242,182,48,.2)}
+.mid{display:flex;flex-direction:column;align-items:center;gap:6px}
+.mid .lbl{font-family:var(--display);text-transform:uppercase;letter-spacing:.1em;font-size:12px;opacity:.75;text-align:center;white-space:nowrap}
+.clock{font-family:var(--display);font-weight:700;font-size:42px;line-height:1;color:var(--board-ink);font-variant-numeric:tabular-nums}
+.boardhint{text-align:center;margin:8px 0 0}
+.ghost{position:fixed;z-index:20;width:58px;height:58px;margin:-29px 0 0 -29px;border-radius:50%;background:var(--led);color:#1a1405;display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:22px;pointer-events:none;box-shadow:0 6px 18px rgba(0,0,0,.35)}
+.tok.drop{outline:4px solid var(--led);outline-offset:2px;transform:translate(-50%,-50%) scale(1.12);z-index:2}
+@media (max-width:620px){.board{padding:10px;gap:8px}.sc{font-size:42px;padding:3px 10px}.plus{width:44px;height:44px;font-size:28px}.clock{font-size:30px}.board .tn{font-size:13px}}
+
+/* games list */
+.glist{list-style:none;margin:0;padding:0}
+.glist li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.glist li:first-child{border-top:0}
+.glist .gt{font-weight:600}.glist .gs{font-size:13px;color:var(--muted)}
+.glist .gr{font-family:var(--display);font-weight:700;font-size:20px;margin-right:6px;font-variant-numeric:tabular-nums}
+.glist li.cur{background:var(--surface-2);border-radius:10px;padding-inline:10px;border-top-color:transparent}
 .btn{border:1px solid var(--line);background:var(--surface);border-radius:9px;padding:9px 14px;font-weight:600}
 .btn:hover{border-color:var(--muted)}
 .btn.dark{background:transparent;color:var(--board-ink);border-color:rgba(255,255,255,.3)}
@@ -83,9 +105,9 @@ button{cursor:pointer}
 .game{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:16px;margin-top:14px;align-items:start}
 @media (max-width:860px){.game{grid-template-columns:minmax(0,1fr)}}
 .pitchcol{display:flex;flex-direction:column;gap:10px;min-width:0}
-.pitch{position:relative;width:100%;max-width:max(280px,min(100%,calc((100dvh - 250px)*.68)));aspect-ratio:68/100;margin-inline:auto;border-radius:10px;overflow:hidden;container-type:inline-size;
+.pitch{position:relative;width:100%;max-width:max(280px,min(100%,calc((100dvh - 345px)*.68)));aspect-ratio:68/100;margin-inline:auto;border-radius:10px;overflow:hidden;container-type:inline-size;
   background:repeating-linear-gradient(180deg,var(--grass) 0 10%,var(--grass-2) 10% 20%)}
-@media (max-width:860px){.pitch{max-width:max(280px,min(100%,calc((100dvh - 330px)*.68)))}}
+@media (max-width:860px){.pitch{max-width:max(280px,min(100%,calc((100dvh - 420px)*.68)))}}
 .pitch svg{position:absolute;inset:0;width:100%;height:100%}
 .pitch svg *{fill:none;stroke:var(--chalk);stroke-width:.35}
 .pitch svg .spot{fill:var(--chalk);stroke:none}
@@ -131,7 +153,7 @@ button{cursor:pointer}
 .tag.g{background:var(--led);color:#1a1405}
 
 /* sub bar */
-.subbar{position:fixed;left:0;right:0;bottom:0;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));background:var(--board);color:var(--board-ink);display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;box-shadow:0 -4px 18px rgba(0,0,0,.25);z-index:5}
+.subbar{position:fixed;left:0;right:0;bottom:calc(66px + env(safe-area-inset-bottom,0px));padding:12px 16px;background:var(--board);color:var(--board-ink);display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;box-shadow:0 -4px 18px rgba(0,0,0,.25);z-index:5}
 .subbar .pair{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-weight:600}
 .chip{padding:4px 10px;border-radius:6px;font-weight:600}
 .chip.in{background:var(--in);color:var(--in-ink)} .chip.out{background:var(--out);color:var(--out-ink)}
@@ -142,7 +164,7 @@ button{cursor:pointer}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;min-width:0}
 .cols{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:16px;align-items:start}
 @media (max-width:860px){.cols{grid-template-columns:minmax(0,1fr)}}
-.cols>.card:first-child{grid-column:1/-1}
+.cols>.card.full{grid-column:1/-1}
 .field{display:flex;flex-direction:column;gap:4px;margin-bottom:10px}
 .field label{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
 input[type=text],input[type=date],input[type=number],select{background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:8px 10px;width:100%;min-width:0}
@@ -228,16 +250,17 @@ table.season{border-collapse:separate;border-spacing:0;width:100%;font-variant-n
 <div class="wrap">
   <div class="nav">
     <div class="brand">Sideline Subs<small id="teamName"></small></div>
-    <div class="tabs" role="tablist">
-      <button role="tab" data-tab="game" id="tab-game">Game</button>
-      <button role="tab" data-tab="season" id="tab-season">Minutes</button>
-      <button role="tab" data-tab="team" id="tab-team">Team</button>
-    </div>
   </div>
   <div id="banner"></div>
   <main id="view"><div class="empty-state"><h2>Loading your team</h2><p>Roster, games and minutes appear here in a moment.</p></div></main>
 </div>
 <div id="subbar" class="subbar" hidden></div>
+<nav class="bottomnav" aria-label="Screens">
+  <button data-tab="team" id="tab-team"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 19c.6-3.3 3-5 6-5s5.4 1.7 6 5"/><circle cx="17" cy="9" r="2.5"/><path d="M16.5 14c2.4.2 4 1.7 4.5 4.5"/></svg>Team</button>
+  <button data-tab="games" id="tab-games"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4M12 13v4M10 15h4"/></svg>Games</button>
+  <button data-tab="game" id="tab-game"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M4 12h16"/><circle cx="12" cy="12" r="2.6"/><path d="M9 3v3h6V3M9 21v-3h6v3"/></svg>Field</button>
+  <button data-tab="season" id="tab-season"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="7.5"/><path d="M12 9v4l2.5 2M10 3h4"/></svg>Minutes</button>
+</nav>
 <div id="toast" class="toast" hidden></div>
 
 <script>
@@ -256,7 +279,7 @@ const rolesOf = p => Array.isArray(p?.roles) ? p.roles : [];
 const roleText = p => rolesOf(p).map(r=>r==='GK'?'GK':r==='D'?'DEF':r==='M'?'MID':'FWD').join(' · ');
 // Only a player marked as goalie may stand in goal.
 function canPlay(g,pid,slot){ return slot==null || slotRole(g,slot)!=='GK' || rolesOf(player(g,pid)).includes('GK'); }
-const notGoalie = (g,pid) => toast(`${player(g,pid).name} isn't marked as a goalie. Tick GK for them on the Team tab first.`);
+const notGoalie = (g,pid) => toast(`${player(g,pid).name} isn't marked as a goalie. Tick GK for them on the Team screen first.`);
 
 // Starting lineup: goalies in goal, then each outfield spot from players marked for it
 // (scarcest spots first, most specialised players first). Unmarked players fill leftover
@@ -303,6 +326,7 @@ function sortedGames(){
   return Object.values(S.games).sort((a,b)=>(a.date||'').localeCompare(b.date||'') || (a.created||0)-(b.created||0));
 }
 function currentGame(){
+  if(S.openId && S.games[S.openId]) return S.games[S.openId];
   const gs = sortedGames();
   const live = gs.filter(g=>g.status==='live');
   return live.length ? live[live.length-1] : gs[gs.length-1] || null;
@@ -338,7 +362,7 @@ function persist(path, getData){
   })();
 }
 const saveGame = g => { g.updated=Date.now(); S.games[g.id]=g; persist('games/'+g.id, ()=>S.games[g.id]); };
-const removeGame = id => { delete S.games[id]; persist('games/'+id, ()=>null); };
+const removeGame = id => { delete S.games[id]; if(S.openId===id) S.openId=null; persist('games/'+id, ()=>null); };
 const saveTeam = () => persist('team/main', ()=>S.team);
 
 /* Starting data for a fresh install: the Metrostars roster and the Westfield game entered during testing. */
@@ -351,12 +375,13 @@ async function initStore(){
   if(d && (d.team || Object.keys(d.games||{}).length)){ S.team=d.team||null; S.games=d.games||{}; }
   else { S.team=structuredClone(SEED.team); S.games=structuredClone(SEED.games); lsWrite(); }
   S.mode='local'; S.loaded={team:true,games:true};
-  if(!currentGame() && S.view==='game') S.view='team';
+  if(!['team','games','game','season'].includes(S.view)) S.view='team';
+  if(!currentGame() && S.view==='game') S.view='games';
   render();
 }
 function lsWrite(){
   try{ localStorage.setItem(LS_KEY, JSON.stringify({team:S.team,games:S.games})); }
-  catch{ toast('This iPad could not save. Export a backup from the Team tab.'); }
+  catch{ toast('This iPad could not save. Export a backup from the Team screen.'); }
 }
 
 /* ---------- rendering ---------- */
@@ -364,18 +389,19 @@ function setView(v){ S.view=v; S.selB=S.selF=S.selSlot=null; S.armed=null; S.add
 
 function render(){
   if(!S.loaded.team || !S.loaded.games) return;
-  document.querySelectorAll('[data-tab]').forEach(b=>b.setAttribute('aria-selected', String(b.dataset.tab===S.view)));
+  document.querySelectorAll('[data-tab]').forEach(b=>{ if(b.dataset.tab===S.view) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); });
   $('#teamName').textContent = S.team?.name ? '· '+S.team.name : '';
   const ex = S.team?.example || Object.values(S.games).some(g=>g.example);
-  $('#banner').innerHTML = ex ? `<div class="banner"><span>You're looking at an example team and example games. Put in your own roster on the Team tab, then clear the examples.</span>
+  $('#banner').innerHTML = ex ? `<div class="banner"><span>You're looking at an example team and example games. Put in your own roster on the Team screen, then clear the examples.</span>
     <button class="btn ${S.armed==='clearEx'?'armed':''}" data-act="clearEx">${S.armed==='clearEx'?'Tap again to clear examples':'Clear examples'}</button></div>` : '';
   const keep={}, focus=document.activeElement?.id;
-  if(S.view==='team') document.querySelectorAll('#view input[id]:not([type=file]),#view select[id]').forEach(i=>keep[i.id]=i.type==='checkbox'?i.checked:i.value);
+  if(S.view==='team'||S.view==='games') document.querySelectorAll('#view input[id]:not([type=file]),#view select[id]').forEach(i=>keep[i.id]=i.type==='checkbox'?i.checked:i.value);
   if(S.view==='game') renderGame();
   else if(S.view==='season') renderSeason();
+  else if(S.view==='games') renderGames();
   else renderTeam();
   Object.entries(keep).forEach(([id,v])=>{ const i=document.getElementById(id); if(i){ if(i.type==='checkbox') i.checked=v; else i.value=v; } });
-  if(focus && S.view==='team') document.getElementById(focus)?.focus();
+  if(focus && (S.view==='team'||S.view==='games')) document.getElementById(focus)?.focus();
   renderSubbar();
   tick();
 }
@@ -400,8 +426,8 @@ function clockLabel(g){
 function renderGame(){
   const el=$('#view'); const g=currentGame();
   if(!g){
-    el.innerHTML = `<div class="card empty-state"><h2>No game yet</h2><p>Add your players on the Team tab, then start a game. Your starting lineup goes on the field and everyone else waits on the bench.</p>
-      <button class="btn led" data-act="go" data-v="team">Set up team</button></div>`;
+    el.innerHTML = `<div class="card empty-state"><h2>No game yet</h2><p>Start a game on the Games screen. Your starting lineup goes on the field and everyone else waits on the bench.</p>
+      <button class="btn led" data-act="go" data-v="games">Go to Games</button></div>`;
     return;
   }
   const final = g.status==='final' || readOnly;
@@ -429,19 +455,25 @@ function renderGame(){
 
   const started = clockNow(g)>0 || g.clock.runAt;
   el.innerHTML = `
-  <div class="board">
-    <div class="score">
-      <div class="side"><span class="tn">${esc(S.team?.name||'Us')}</span><span class="sc">${g.us}</span></div>
-      <span class="dash">–</span>
-      <div class="side"><span class="tn">${esc(g.opponent||'Opponent')}</span><span class="sc">${g.them}</span></div>
+  <div class="board" aria-label="Scoreboard">
+    <div class="team us" data-score="for">
+      <div class="tn">${esc(S.team?.name||'Us')}</div>
+      <div class="digits"><span class="sc ${S.bump==='for'?'bump':''}" aria-label="Our goals">${g.us}</span>
+        <button class="plus" data-plus="for" aria-label="Add a goal for ${esc(S.team?.name||'us')}" ${final?'disabled':''}>+</button></div>
     </div>
-    <div class="clockbox">
-      <div><div class="lbl">${clockLabel(g)} · ${fmtDate(g.date)}</div></div>
+    <div class="mid">
+      <div class="lbl">${clockLabel(g)} · ${fmtDate(g.date)}</div>
       <div class="clock" data-clock>${fmt(clockNow(g))}</div>
       ${g.status==='final' ? `<button class="btn dark" data-act="reopen">Reopen</button>` :
         `<button class="btn ${g.clock.runAt?'dark':'led'}" data-act="clock" ${readOnly?'disabled':''}>${g.clock.runAt?'Pause':started?'Resume':'Kick off'}</button>`}
     </div>
+    <div class="team them" data-score="against">
+      <div class="tn">${esc(g.opponent||'Opponent')}</div>
+      <div class="digits"><button class="plus" data-plus="against" aria-label="Add a goal for ${esc(g.opponent||'the opponent')}" ${final?'disabled':''}>+</button>
+        <span class="sc ${S.bump==='against'?'bump':''}" aria-label="Their goals">${g.them}</span></div>
+    </div>
   </div>
+  ${final?'':`<p class="hint boardhint">Tap <b>+</b> to add a goal. Drag our <b>+</b> onto a player on the field to credit the scorer.</p>`}
   <div class="game">
     <div class="pitchcol">
       <div class="viewbar"><span class="hint" style="margin:0">${final?'':'Tap a field player, then another spot, to change positions.'}</span>
@@ -450,8 +482,6 @@ function renderGame(){
           <button data-act="display" data-v="photos" aria-pressed="${photos}">Photos</button></div></div>
       <div class="pitch" style="--tw:${TW[g.format]}cqw">${pitchSVG()}<span class="attack">Attacking ↑</span>${toks}</div>
       ${final?'':`<div class="actions">
-        <button class="btn goal" data-act="goalFor">Our goal${S.selF?' · '+esc(player(g,S.selF).name):''}</button>
-        <button class="btn against" data-act="goalAgainst">Goal against</button>
         <button class="btn" data-act="undo" ${g.events.length?'':'disabled'}>Undo last</button>
         <button class="btn warn ${S.armed==='end'?'armed':''}" data-act="end">${S.armed==='end'?'Tap again to end':'End game'}</button>
       </div>`}
@@ -487,7 +517,7 @@ function evBody(g,e){
   if(e.type==='for') return `<span class="tag g">Goal</span>${e.by?esc(label(g,e.by)):esc(S.team?.name||'Us')}${late}`;
   return `<span class="tag out">Conceded</span>${esc(g.opponent||'Opponent')}${late}`;
 }
-// Newest first on the Game screen, in match order on the Minutes screen. Goals can be removed.
+// Newest first on the Field screen, in match order on the Minutes screen. Goals can be removed.
 function logItems(g,newestFirst){
   const list=newestFirst?[...g.events].reverse():g.events;
   return list.map(e=>{
@@ -578,7 +608,7 @@ function renderSeason(){
       ${evs?`<ul class="log" style="max-height:none">${evs}</ul>`:`<p class="hint">No subs or goals logged.</p>`}
       <p class="hint" style="margin-top:12px">Reset times keeps this game and its players but puts the clock, score, play times and log back to kick-off with the starting lineup. Delete game removes it from the grid.</p>
       <div class="actions" style="max-width:560px">
-        <button class="btn" data-act="openGame" data-id="${sg.id}">Open on Game screen</button>
+        <button class="btn" data-act="openGame" data-id="${sg.id}">Open on Field</button>
         <button class="btn warn ${S.armed==='reset'?'armed':''}" data-act="resetGame" data-id="${sg.id}" ${readOnly?'disabled':''}>${S.armed==='reset'?'Tap again to reset':'Reset times'}</button>
         <button class="btn warn ${S.armed==='del'?'armed':''}" data-act="delGame" data-id="${sg.id}" ${readOnly?'disabled':''}>${S.armed==='del'?'Tap again to delete':'Delete game'}</button>
       </div></section>`;
@@ -602,10 +632,8 @@ function renderTeam(){
       ${p.photo?`<button class="x" data-act="rmPhoto" data-pid="${p.id}">No photo</button>`:''}
       <button class="x" data-act="rmPlayer" data-pid="${p.id}" aria-label="Remove ${esc(p.name)}">Remove</button></div>`).join('');
   const unmarked = t.players.filter(p=>!rolesOf(p).length).length, goalies = t.players.filter(p=>rolesOf(p).includes('GK')).length;
-  const att = t.players.map(p=>`<label><input type="checkbox" id="att-${p.id}" data-att="${p.id}" checked> ${esc(p.num)} ${esc(p.name)}</label>`).join('');
-  const live = Object.values(S.games).some(g=>g.status==='live');
   el.innerHTML = `<div class="cols">
-    <section class="card">
+    <section class="card full">
       <h2>Team <span>${t.players.length} players</span></h2>
       <div class="row2">
         <div class="field"><label for="teamNameIn">Team name</label><input type="text" id="teamNameIn" data-edit="teamName" value="${esc(t.name)}" placeholder="e.g. U10 Strikers"></div>
@@ -625,6 +653,29 @@ function renderTeam(){
       </form>
     </section>
     <section class="card">
+      <h2>Backup <span>${Object.keys(S.games).length} games saved on this iPad</span></h2>
+      <p class="hint">Everything saves on this iPad automatically. Export a backup now and then (to Files or AirDrop) so nothing is lost if the iPad is reset. Import replaces what's here with the backup.</p>
+      <div class="actions">
+        <button class="btn" data-act="export">Export backup</button>
+        <label class="btn" for="importFile" style="text-align:center">Import backup</label>
+        <input type="file" id="importFile" accept="application/json,.json" hidden>
+      </div>
+    </section></div>`;
+}
+
+function renderGames(){
+  const el=$('#view'); const t=S.team||{name:'',format:7,players:[]};
+  const att = t.players.map(p=>`<label><input type="checkbox" id="att-${p.id}" data-att="${p.id}" checked> ${esc(p.num)} ${esc(p.name)}</label>`).join('');
+  const live = Object.values(S.games).some(g=>g.status==='live');
+  const cur = currentGame();
+  const items = sortedGames().reverse().map(g=>{
+    const r=g.us>g.them?'W':g.us<g.them?'L':'D';
+    return `<li class="${cur?.id===g.id?'cur':''}"><div><div class="gt"><span class="gr">${g.us}–${g.them}</span>vs ${esc(g.opponent||'—')}</div>
+      <div class="gs">${fmtDate(g.date)} · ${g.format} v ${g.format} · ${g.status==='live'?`<span class="live">LIVE</span> ${fmt(clockNow(g))}`:`Full time <span class="wl ${r}">${r}</span>`}</div></div>
+      <button class="btn ${g.status==='live'?'led':''}" data-act="openId" data-id="${g.id}">${g.status==='live'?'Continue':'View'}</button></li>`;
+  }).join('');
+  el.innerHTML = `<div class="cols">
+    <section class="card">
       <h2>New game</h2>
       <div class="field"><label for="opp">Opponent</label><input type="text" id="opp" placeholder="e.g. Riverside FC"></div>
       <div class="row2">
@@ -637,13 +688,8 @@ function renderTeam(){
       <button class="btn led" data-act="newGame" ${t.players.length&&!readOnly?'':'disabled'} style="width:100%">Start game</button>
     </section>
     <section class="card">
-      <h2>Backup <span>${Object.keys(S.games).length} games saved on this iPad</span></h2>
-      <p class="hint">Everything saves on this iPad automatically. Export a backup now and then (to Files or AirDrop) so nothing is lost if the iPad is reset. Import replaces what's here with the backup.</p>
-      <div class="actions">
-        <button class="btn" data-act="export">Export backup</button>
-        <label class="btn" for="importFile" style="text-align:center">Import backup</label>
-        <input type="file" id="importFile" accept="application/json,.json" hidden>
-      </div>
+      <h2>Games <span>${Object.keys(S.games).length} played</span></h2>
+      ${items?`<ul class="glist">${items}</ul>`:'<p class="hint">Games you start show up here. Tap one to open it on the Field screen.</p>'}
     </section></div>`;
 }
 
@@ -690,13 +736,47 @@ function undo(){
   else { g.them=Math.max(0,g.them-1); toast('Goal against removed'); }
   saveGame(g); render();
 }
-function goal(type){
-  const g=currentGame(); if(!g) return;
+function goal(type,by){
+  const g=currentGame(); if(!g || g.status==='final') return;
   const e={id:uid('e'),n:Date.now(),c:clockNow(g),type};
-  if(type==='for'){ g.us++; if(S.selF) e.by=S.selF; } else g.them++;
-  g.events.push(e); S.selF=null; S.selSlot=null;
-  saveGame(g); render();
+  if(type==='for'){ g.us++; const s=by||S.selF; if(s) e.by=s; } else g.them++;
+  g.events.push(e); S.selF=null; S.selSlot=null; S.bump=type;
+  saveGame(g); render(); S.bump=null;
+  toast(type==='for' ? `Goal${e.by?' by '+player(g,e.by).name:''}! ${g.us}–${g.them}` : `Goal against. ${g.us}–${g.them}`);
 }
+// Scoreboard "+": a tap adds a goal; dragging our "+" onto a field player credits them as scorer.
+let drag=null;
+function dropTarget(side,x,y){
+  const el=document.elementFromPoint(x,y); if(!el) return null;
+  if(side==='for'){ const tok=el.closest('.tok[data-pid]'); if(tok) return tok; }
+  return el.closest(`[data-score="${side}"]`);
+}
+document.addEventListener('pointerdown',ev=>{
+  const h=ev.target.closest('[data-plus]'); if(!h || h.disabled) return;
+  ev.preventDefault();
+  drag={side:h.dataset.plus,x:ev.clientX,y:ev.clientY,id:ev.pointerId,moved:false,ghost:null,over:null};
+  try{ h.setPointerCapture(ev.pointerId); }catch{}
+});
+document.addEventListener('pointermove',ev=>{
+  if(!drag || ev.pointerId!==drag.id) return;
+  if(!drag.moved && Math.hypot(ev.clientX-drag.x, ev.clientY-drag.y)<10) return;
+  if(!drag.moved){ drag.moved=true; drag.ghost=document.createElement('div'); drag.ghost.className='ghost'; drag.ghost.textContent='+1'; document.body.appendChild(drag.ghost); }
+  drag.ghost.style.left=ev.clientX+'px'; drag.ghost.style.top=ev.clientY+'px';
+  const t=dropTarget(drag.side,ev.clientX,ev.clientY);
+  if(t!==drag.over){ drag.over?.classList.remove('drop'); t?.classList.add('drop'); drag.over=t; }
+});
+function finishDrag(ev,cancelled){
+  if(!drag || ev.pointerId!==drag.id) return;
+  const d=drag; drag=null; d.ghost?.remove(); d.over?.classList.remove('drop');
+  if(cancelled) return;
+  if(!d.moved){ goal(d.side); return; }
+  const t=dropTarget(d.side,ev.clientX,ev.clientY);
+  if(t?.dataset.pid) goal('for', t.dataset.pid);
+  else if(t) goal(d.side);
+  else toast(d.side==='for' ? 'Drop the + on a player to credit the goal, or just tap +.' : 'Tap + to add a goal against.');
+}
+document.addEventListener('pointerup',ev=>finishDrag(ev,false));
+document.addEventListener('pointercancel',ev=>finishDrag(ev,true));
 // Goal entered after the fact: placed in the log at the game minute given.
 function addLateGoal(g){
   const side=document.getElementById('agAgainst')?.checked?'against':'for';
@@ -750,8 +830,8 @@ function newGame(){
   const g={id:uid('g'),created:Date.now(),date:$('#gdate').value||today(),opponent:$('#opp').value.trim(),format,status:'live',
     clock:{acc:0,runAt:null},us:0,them:0,lineup,events:[],players:here.map(p=>({id:p.id,name:p.name,num:p.num}))};
   const open = FORMATS[format].length - Object.values(lineup).filter(p=>p.slot!=null).length;
-  saveGame(g); setView('game');
-  toast(open ? `Lineup set with ${open} open spot${open>1?'s':''}. Fill from the bench or mark more positions on the Team tab.` : 'Lineup set by position. Adjust now or tap Kick off.');
+  S.openId=g.id; saveGame(g); setView('game');
+  toast(open ? `Lineup set with ${open} open spot${open>1?'s':''}. Fill from the bench or mark more positions on the Team screen.` : 'Lineup set by position. Adjust now or tap Kick off.');
 }
 
 let lock=null;
@@ -786,16 +866,12 @@ document.addEventListener('click',ev=>{
   else if(a==='sub') doSub();
   else if(a==='clearSel'){ S.selB=S.selF=S.selSlot=null; render(); }
   else if(a==='clock') toggleClock();
-  else if(a==='goalFor') goal('for');
-  else if(a==='goalAgainst') goal('against');
   else if(a==='undo') undo();
   else if(a==='end'){ if(arm('end')){ S.armed=null; endGame(g); S.selB=S.selF=S.selSlot=null; saveGame(g); render(); toast('Full time. Minutes saved.'); } }
-  else if(a==='reopen'){ g.status='live'; saveGame(g); render(); }
+  else if(a==='reopen'){ Object.values(S.games).forEach(x=>{ if(x.status==='live' && x.id!==g.id){ endGame(x); saveGame(x); } }); g.status='live'; saveGame(g); render(); }
   else if(a==='go') setView(b.dataset.v);
   else if(a==='gridGame'){ S.gridGame = S.gridGame===b.dataset.id?null:b.dataset.id; S.armed=null; render(); }
-  else if(a==='openGame'){ const sg=S.games[b.dataset.id];
-    Object.values(S.games).forEach(x=>{ if(x.status==='live' && x.id!==sg.id){ endGame(x); saveGame(x); } });
-    if(sg.status!=='live'){ sg.status='live'; saveGame(sg); } setView('game'); }
+  else if(a==='openGame' || a==='openId'){ S.openId=b.dataset.id; setView('game'); }
   else if(a==='resetGame'){ if(arm('reset')){ S.armed=null; resetGame(S.games[b.dataset.id]); render(); toast('Game reset to kick-off'); } }
   else if(a==='delGame'){ if(arm('del')){ S.armed=null; removeGame(b.dataset.id); S.gridGame=null; render(); toast('Game deleted'); } }
   else if(a==='rmPlayer'){ const t=ensureTeam(); t.players=t.players.filter(p=>p.id!==pid); saveTeam(); render(); }
